@@ -88,4 +88,7 @@ if($foundNode !== null){
     echo "No sensor data found for temperature " . $searchTemp . "°C <br>";
 }
 
+// Matthew Alexander Andriyanto
+// 231232025
+
 ?>

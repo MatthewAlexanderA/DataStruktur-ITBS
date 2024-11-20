@@ -89,4 +89,7 @@ if($foundLog !== null){
     echo "No log found for timestamp " . $searchTime . "<br>";
 }
 
+// Matthew Alexander Andriyanto
+// 231232025
+
 ?>
