@@ -1,0 +1,12 @@
+# Ignore .env file (contains sensitive data)
+.env
+
+# Ignore Composer dependencies
+/vendor/
+
+# Ignore uploaded images
+/images/
+
+# Ignore IDE-specific files
+.idea/
+.vscode/
