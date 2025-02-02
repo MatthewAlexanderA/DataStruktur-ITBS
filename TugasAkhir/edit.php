@@ -13,31 +13,39 @@ $id = $_GET['id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
-    $picture = $_FILES['picture']['name'];
     $author = $_POST['author'];
     $total_pages = $_POST['total_pages'];
     $publish_year = $_POST['publish_year'];
 
-    // Validate input
-    if (empty($title) || empty($author) || empty($total_pages) || empty($publish_year)) {
-        $error = "All fields are required!";
-    } else {
-        // Upload new picture if provided
-        if (!empty($picture)) {
-            $target_dir = "images/";
-            $target_file = $target_dir . basename($_FILES["picture"]["name"]);
-            move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file);
-        } else {
-            // Keep the existing picture
-            $existing_book = $book->read();
-            $picture = $existing_book['picture'];
-        }
+    // Handle image upload
+    if (!empty($_FILES['picture']['name'])) {
+        $picture = $_FILES['picture']['name'];
+        $target_dir = "images/";
+        $target_file = $target_dir . basename($_FILES["picture"]["name"]);
 
-        // Update book in database
+        // Move the uploaded file to the images directory
+        if (move_uploaded_file($_FILES["picture"]["tmp_name"], $target_file)) {
+            // Update the book with the new image
+            $book->update($id, $title, $picture, $author, $total_pages, $publish_year);
+        } else {
+            $error = "Failed to upload image.";
+        }
+    } else {
+        // If no new image is uploaded, keep the existing image
+        $existing_book = $book->read();
+        $current_book = null;
+        foreach ($existing_book as $b) {
+            if ($b['id'] == $id) {
+                $current_book = $b;
+                break;
+            }
+        }
+        $picture = $current_book['picture'];
         $book->update($id, $title, $picture, $author, $total_pages, $publish_year);
-        header("Location: index.php");
-        exit();
     }
+
+    header("Location: index.php");
+    exit();
 }
 
 $book_data = $book->read();
